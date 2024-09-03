@@ -31,3 +31,8 @@ To run the server and client applications, please follow these instructions:
     - Start the server by running `uvicorn app.main:app --reload` in the server directory.
     - Open a new terminal window and change to the client directory using `cd client`.
     - Start the client application by running `npm start`.
+
+
+for testing:
+username: testuser
+password: pwd
