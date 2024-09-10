@@ -11,7 +11,25 @@ const PurchaseModal = ({ visible, onClose, fund, onSubmit }) => {
   const handleTabChange = (key) => {
     setActiveTab(key);
   };
-
+  const isAmountValid = (value) => {
+    // valid amount based validation
+    if (value < fund?.minimum_purchase_amount) {
+      return `Amount should be greater than or equal to ${fund?.minimum_purchase_amount}`
+    }
+  };
+  const isAmountValidSIP = () => {
+    // if SIP
+    return isAmountValid(form.getFieldValue("amount"));
+  };
+  const isFormSubmitDisabled = () => {
+    if (isAmountValidSIP()) {
+      return true;
+    }
+    if (activeTab === "monthly") {
+      return form.getFieldError("sipDate") || form.getFieldError("amount");
+    }
+    return form.getFieldError("amount");
+  };
   const handleSubmit = async () => {
     try {
       const values = await form.getFieldsValue();
@@ -62,6 +80,7 @@ const PurchaseModal = ({ visible, onClose, fund, onSubmit }) => {
             <Form.Item
               label="SIP Amount"
               name="amount"
+              extra={`Minimum SIP amount: ₹${fund?.minimum_purchase_amount || 0}`}
               rules={[{ required: true, message: "Please enter SIP amount!" }]}
             >
               <Input type="number" />
@@ -73,6 +92,7 @@ const PurchaseModal = ({ visible, onClose, fund, onSubmit }) => {
             <Form.Item
               label="Amount"
               name="amount"
+              extra={`Minimum amount: ₹${fund?.minimum_purchase_amount || 0}`}
               rules={[{ required: true, message: "Please enter amount!" }]}
             >
               <Input type="number" />
@@ -81,7 +101,7 @@ const PurchaseModal = ({ visible, onClose, fund, onSubmit }) => {
         </TabPane>
       </Tabs>
       <div style={{ textAlign: "right" }}>
-        <Button onClick={handleSubmit} type="primary">
+        <Button onClick={handleSubmit} type="primary" disabled={isFormSubmitDisabled()}>
           Submit
         </Button>
       </div>

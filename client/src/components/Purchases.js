@@ -8,7 +8,6 @@ const FundPurchasePage = () => {
 
   const fetchAndSetPurchases = async () => {
     const purchases = await getPurchases();
-    console.log('Purchases:', purchases);
     if (purchases.success && purchases?.data?.length) setPurchases(purchases.data);
 
   };

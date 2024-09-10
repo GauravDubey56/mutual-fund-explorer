@@ -145,3 +145,4 @@ logs/
 # Local environment variables
 .env.local
 .env.*.local
+.DS_Store

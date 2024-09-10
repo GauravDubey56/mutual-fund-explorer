@@ -2,6 +2,11 @@ import axios from "axios";
 import { API_BASE_URL } from "../components/Constants";
 import { getKeyFromLocalStorage } from "../components/LocalStore";
 import { apiReponse } from "./utils";
+
+export const PAGES_LISTING_LIMIT = {
+  FUNDS: 50,
+  PURCHASES: 20
+}
 export const getFundsFamilyNames = async () => {
   try {
     const url = `${API_BASE_URL}/funds/fund_groups`;
@@ -30,8 +35,10 @@ export const getFundsFamilyNames = async () => {
   }
 };
 
-export const getFundsByFamily = async (family) => {
+export const getFundsByFamily = async (family, pageNumber) => {
   try {
+    pageNumber = pageNumber || 1;
+    const offset = (pageNumber - 1) * PAGES_LISTING_LIMIT.FUNDS;
     const url = `${API_BASE_URL}/funds/funds_list`;
     const token = getKeyFromLocalStorage("accessToken");
     const response = await axios.get(url, {
@@ -40,7 +47,9 @@ export const getFundsByFamily = async (family) => {
       },
       params: {
         token,
-        fund_family: family
+        fund_family: family,
+        limit: PAGES_LISTING_LIMIT.FUNDS,
+        offset
       }
     });
     if (response.status === 200 && response?.data?.length) {
@@ -73,7 +82,6 @@ export const getFundById = async (id) => {
       }
     });
     if (response.status === 200 && response?.data) {
-      console.log(response?.data)
       return apiReponse(true, "Funds fetched", response.data, 200);
     } else {
       return apiReponse(false, "Funds not found", null, 404);
@@ -93,7 +101,6 @@ export const purchaseFund = async (payload) => {
   try {
     const url = `${API_BASE_URL}/funds/purchase`;
     const token = getKeyFromLocalStorage("accessToken");
-    console.log("Purchase payload:", payload, token);
     const payloadWrap = {
       url,
       method: "POST",
@@ -152,3 +159,60 @@ export const getPurchases = async () => {
     );
   }
 }
+
+export const getFundsCountByFamily = async (family) => {
+  try {
+    const url = `${API_BASE_URL}/funds/funds_count`;
+    const token = getKeyFromLocalStorage("accessToken");
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        token,
+        fund_family: family
+      }
+    });
+    if (response.status === 200 && !Number.isNaN(response?.data?.count) ) {
+      return apiReponse(true, "Funds fetched", response.data, 200);
+    } else {
+      return apiReponse(false, "Funds not found", null, 404);
+    }
+  } catch (error) {
+    return apiReponse(
+      false,
+      error.response?.data?.message || "Something went wrong",
+      null,
+      error.response?.status || 500
+    );
+  }
+};
+
+export const getFundsByKeyword = async (keyword, family) => {
+  try {
+    const url = `${API_BASE_URL}/funds/search_funds`;
+    const token = getKeyFromLocalStorage("accessToken");
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        token,
+        fund_family: family ? family: null,
+        search_string: keyword
+      }
+    });
+    if (response.status === 200 && response?.data?.length) {
+      return apiReponse(true, "Funds fetched", response.data, 200);
+    } else {
+      return apiReponse(false, "Funds not found", null, 404);
+    }
+  } catch (error) {
+    return apiReponse(
+      false,
+      error.response?.data?.message || "Something went wrong",
+      null,
+      error.response?.status || 500
+    );
+  }
+};
