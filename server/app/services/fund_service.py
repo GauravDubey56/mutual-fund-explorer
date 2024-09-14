@@ -98,6 +98,7 @@ def search_open_ended_schemes(search_string: str, fund_family: str = None):
         scheme_type
     FROM mutual_fund_schemes
     WHERE ts @@ to_tsquery('english', %s)
+    LIMIT 50
     '''
     search_terms = search_string.split()    
     search_query = ' & '.join(search_terms)
