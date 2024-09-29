@@ -7,6 +7,9 @@ import { ShoppingCartOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import PurchaseModal from "./PurchaseModal"; // Import the new PurchaseModal
 import CustomPagination from "./common/Pagination";
 import CustomSearchBar from "./common/SearchBar";
+import DescriptionContent from "./common/DescriptionContent";
+import PageTitle from "./utils/PageTitle";
+
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -57,17 +60,7 @@ const Dashboard = () => {
         Modal.success({
           title: "Purchase Successful",
           content: (
-            <Descriptions column={1}>
-              <Descriptions.Item label="Folio Number">
-                {data.folio_number}
-              </Descriptions.Item>
-              <Descriptions.Item label="Units Purchased">
-                {data.units_purchased}
-              </Descriptions.Item>
-              <Descriptions.Item label="Amount">
-                {data.amount}
-              </Descriptions.Item>
-            </Descriptions>
+            <DescriptionContent fund={data} />
           ),
         });
         handleModalClose();
@@ -173,7 +166,7 @@ const Dashboard = () => {
   }, [searchValue]);
   return (
     <div>
-      <Title level={2}>Mutual Funds Explorer</Title>
+      <PageTitle title="Dashboard" />
       <div style={{ display: "flex", marginBottom: 20 }}>
         <Select
           style={{ width: 200, marginRight: 10 }}
@@ -196,6 +189,7 @@ const Dashboard = () => {
           onSubmit={(e) => {fetchFundsOnSearch()}}
           onClear={onSearchClearHandler}
         />
+
       </div>
 
       { viewFundsList() && (

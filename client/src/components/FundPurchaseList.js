@@ -1,13 +1,12 @@
 import React from 'react';
-import { List, Descriptions, Typography } from 'antd';
+import { List, Descriptions } from 'antd';
 import { formatDateForPurchaseDate } from '../utils/Date';
-
-const { Title } = Typography;
+import PageTitle from './utils/PageTitle';
 
 const FundPurchaseList = ({ purchases }) => {
   return (
     <div>
-      <Title level={4}>Fund Purchases</Title>
+      <PageTitle title="Purchases" />
       <List
         bordered
         dataSource={purchases}

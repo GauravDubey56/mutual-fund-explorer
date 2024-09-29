@@ -8,6 +8,7 @@ import AppHeader from './components/AppHeader'; // Import the AppHeader componen
 import { login } from './api/auth';
 import { getKeyFromLocalStorage, removeKeyFromLocalStorage } from './components/LocalStore';
 import FundPurchasePage from './components/Purchases';
+import Calculator from './components/Calculator';
 
 const { Content } = Layout;
 
@@ -48,6 +49,9 @@ const App = () => {
             } />
             <Route path="/funds" element={
               isLoggedIn ? <FundPurchasePage /> : <Navigate to="/" replace />
+            } />
+            <Route path="/calculator" element={
+              isLoggedIn ? <Calculator /> : <Navigate to="/" replace />
             } />
           </Routes>
         </Content>
