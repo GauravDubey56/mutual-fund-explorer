@@ -1,5 +1,3 @@
-import requests
-from app.config import settings
 from app.database import get_conn
 from app.models import FundFamily, FundScheme, FundSchemeInfo
 def fetch_open_ended_schemes(fund_family: str, offset: int, limit: int = 20):
