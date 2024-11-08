@@ -30,8 +30,11 @@ def get_current_user(token: str = Depends(verify_token)):
 async def get_fund_data(fund_family: str, offset: int, limit: int, user: dict = Depends(get_current_user)):
     request_offset = 0 if offset < 0 or offset is None else offset
     request_limit = 20 if limit > 20 or limit is None else limit
-    data = fetch_open_ended_schemes(
-        fund_family, offset=request_offset, limit=request_limit)
+    try:
+        data = fetch_open_ended_schemes(
+            fund_family, offset=request_offset, limit=request_limit)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     return data
 
 

@@ -8,6 +8,7 @@ import AppHeader from './components/AppHeader'; // Import the AppHeader componen
 import { login } from './api/auth';
 import { getKeyFromLocalStorage, removeKeyFromLocalStorage } from './components/LocalStore';
 import FundPurchasePage from './components/Purchases';
+import Calculator from './components/feature/calculator/Calculator';
 
 const { Content } = Layout;
 
@@ -33,22 +34,46 @@ const App = () => {
 
   return (
     <Router>
-      <Layout style={{ minHeight: '100vh' }}>
+      <Layout style={{ minHeight: "100vh" }}>
         <AppHeader isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-        <Content style={{ padding: '50px' }}>
+        <Content style={{ padding: "50px" }}>
           <Routes>
-            <Route path="/" element={
-              isLoggedIn ? <Navigate to="/dashboard" replace /> : <Login onLogin={handleLogin} />
-            } />
-            <Route path="/dashboard" element={
-              isLoggedIn ? <Dashboard /> : <Navigate to="/" replace />
-            } />
-            <Route path="/fund/:id" element={
-              isLoggedIn ? <FundDetails /> : <Navigate to="/" replace />
-            } />
-            <Route path="/funds" element={
-              isLoggedIn ? <FundPurchasePage /> : <Navigate to="/" replace />
-            } />
+            <Route
+              path="/"
+              element={
+                isLoggedIn ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <Login onLogin={handleLogin} />
+                )
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={isLoggedIn ? <Dashboard /> : <Navigate to="/" replace />}
+            />
+            <Route
+              path="/fund/:id"
+              element={
+                isLoggedIn ? <FundDetails /> : <Navigate to="/" replace />
+              }
+            />
+            <Route
+              path="/funds"
+              element={
+                isLoggedIn ? <FundPurchasePage /> : <Navigate to="/" replace />
+              }
+            />
+            <Route
+              path="/calculator"
+              element={
+                isLoggedIn ? (
+                  <Calculator disableRateInput={false} />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
           </Routes>
         </Content>
       </Layout>

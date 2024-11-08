@@ -1,12 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import { Select, List, Button, Typography, Space, Descriptions, Modal } from "antd";
+import { Select, List, Button, Typography, Space, Modal } from "antd";
 import { Link } from "react-router-dom";
 import { getFundById, getFundsByFamily, getFundsByKeyword, getFundsCountByFamily, getFundsFamilyNames, PAGES_LISTING_LIMIT, purchaseFund } from "../api/funds";
 import { ShoppingCartOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import PurchaseModal from "./PurchaseModal"; // Import the new PurchaseModal
 import CustomPagination from "./common/Pagination";
 import CustomSearchBar from "./common/SearchBar";
+import DescriptionContent from "./common/DescriptionContent";
+import PageTitle from "./utils/PageTitle";
+import FundView from "./feature/fundView/FundView";
+
 const { Option } = Select;
 const { Title } = Typography;
 
@@ -22,9 +26,17 @@ const Dashboard = () => {
   const [selectedFund, setSelectedFund] = useState(null);
   const [fundModal, setFundModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [showList, setShowList] = useState(false);
+  const [currentSearch, setCurrentSearch] = useState("");
   // search related fields
-
+  useEffect(() => {
+    if (!schemes?.length) {
+      setTotalCount(0);
+      setShowList(false);
+    } else {
+      setShowList(true);
+    }
+  }, [schemes])
   const [searchValue, setSearchValue] = useState("");
 
   const showModal = async (fund) => {
@@ -57,17 +69,7 @@ const Dashboard = () => {
         Modal.success({
           title: "Purchase Successful",
           content: (
-            <Descriptions column={1}>
-              <Descriptions.Item label="Folio Number">
-                {data.folio_number}
-              </Descriptions.Item>
-              <Descriptions.Item label="Units Purchased">
-                {data.units_purchased}
-              </Descriptions.Item>
-              <Descriptions.Item label="Amount">
-                {data.amount}
-              </Descriptions.Item>
-            </Descriptions>
+            <DescriptionContent fund={data} />
           ),
         });
         handleModalClose();
@@ -110,9 +112,11 @@ const Dashboard = () => {
   };
   const fetchFundsOnSearch = async () => {  
     setLoading(true);
+
     const fundGroup = selectedFamily ? JSON.parse(selectedFamily) : null;
     const amcCode = fundGroup ? fundGroup.amc_code: null;
     const fundsData = await getFundsByKeyword(searchValue, amcCode);
+    setCurrentSearch(searchValue);
     if (fundsData.success && fundsData.data?.length) {
       setSchemes(fundsData.data);
     }
@@ -120,9 +124,6 @@ const Dashboard = () => {
     return;
   };
 
-  const viewFundsList = () => {
-    return schemes?.length ? true : false;
-  }
   const onClearHandler = () => {
     setSelectedFamily(null);
     setSchemes([]);
@@ -157,6 +158,7 @@ const Dashboard = () => {
         setLoading(false);
       });
     } else {
+      setSelectedFamilyName("");
       setSchemes([]);
     }
   }, [selectedFamily]);
@@ -169,11 +171,13 @@ const Dashboard = () => {
   useEffect(() => {
     if (!searchValue) {
       setSchemes([]);
+      setShowList(false);
+      setCurrentSearch("");
     }
   }, [searchValue]);
   return (
     <div>
-      <Title level={2}>Mutual Funds Explorer</Title>
+      <PageTitle title="Dashboard" />
       <div style={{ display: "flex", marginBottom: 20 }}>
         <Select
           style={{ width: 200, marginRight: 10 }}
@@ -192,15 +196,25 @@ const Dashboard = () => {
         <CustomSearchBar
           style={{ width: 200, marginRight: 10 }}
           placeholder="Search Funds"
-          onChange={(e) => {setSearchValue(e.target.value)}}
-          onSubmit={(e) => {fetchFundsOnSearch()}}
+          onChange={(e) => {
+            setSearchValue(e.target.value);
+          }}
+          onSubmit={(e) => {
+            fetchFundsOnSearch();
+          }}
           onClear={onSearchClearHandler}
         />
       </div>
 
-      { viewFundsList() && (
+      {showList && (
         <List
-          header={<Title level={4}>{selectedFamilyName} Mutual Funds</Title>}
+          header={
+            <Title level={4}>
+              {selectedFamilyName
+                ? `${selectedFamilyName}- FUNDS`
+                : `Search results for "${currentSearch}"`}
+            </Title>
+          }
           bordered
           loading={loading}
           dataSource={schemes}
@@ -225,15 +239,16 @@ const Dashboard = () => {
               ]}
             >
               <List.Item.Meta
-                title={
-                  <Link>{fund.scheme_name}</Link>
-                }
+                title={<Link>{fund.scheme_name}</Link>}
                 onClick={() => showFundModal(fund)}
                 description={fund.scheme_type}
               />
             </List.Item>
           )}
         />
+      )}
+      {schemes.length === 0 && currentSearch && (
+        <Title level={4}>No results found for "{currentSearch}"</Title>
       )}
       <PurchaseModal
         visible={modalVisible}
@@ -247,15 +262,7 @@ const Dashboard = () => {
         onCancel={handleFundModalClose}
         footer={null}
       >
-        {selectedFund && (
-          <Descriptions bordered column={1}>
-            <Descriptions.Item label="Fund Name">{selectedFund.scheme_name}</Descriptions.Item>
-            <Descriptions.Item label="Scheme Code">{selectedFund.scheme_code}</Descriptions.Item>
-            <Descriptions.Item label="Type">{selectedFund.scheme_type}</Descriptions.Item>
-            <Descriptions.Item label="Scheme Plan">{selectedFund.scheme_plan}</Descriptions.Item>
-            <Descriptions.Item label="NAV">₹{selectedFund.minimum_purchase_amount}</Descriptions.Item>  
-          </Descriptions>
-        )}
+        {selectedFund && <FundView selectedFund={selectedFund} />}
       </Modal>
       {pagesCount > 1 && (
         <CustomPagination
