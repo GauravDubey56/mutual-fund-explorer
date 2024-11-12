@@ -31,7 +31,7 @@ To run the server and client applications, please follow these instructions:
     - Start the server by running `uvicorn app.main:app --reload` in the server directory.
     - Open a new terminal window and change to the client directory using `cd client`.
     - Start the client application by running `npm start`.
-
+Test1 commit
 6. Create a .env file in server directory using .env.example file to run the local server.
 
 for testing:
