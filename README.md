@@ -1,5 +1,6 @@
 
 MUTUAL FUND EXPLORER
+-Search API: to fetch mutual funds based on keyword matching using GIN-indexing
 -Fetch mutual fund dataset from an available RAPID API to write on a Postgres DB.
 -Created APIs and UI dashboard to fetch Mutual funds through fund families, get info, purchase dummy units
 
