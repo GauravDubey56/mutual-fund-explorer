@@ -1,42 +1,51 @@
+# 🏦 Mutual Fund Explorer
 
-MUTUAL FUND EXPLORER
--Search API: to fetch mutual funds based on keyword matching using GIN-indexing
--Fetch mutual fund dataset from an available RAPID API to write on a Postgres DB.
--Created APIs and UI dashboard to fetch Mutual funds through fund families, get info, purchase dummy units
+A web application that allows users to search for mutual funds using GIN-indexing, fetch mutual fund datasets from a RAPID API, and interact with mutual fund details via an intuitive UI.
 
+---
 
-To run the server and client applications, please follow these instructions:
+## ✨ Features
 
-1. Node.js Setup:
-    - Install Node.js on your machine. You can download it from the official Node.js website.
-    - Verify the installation by running `node -v` and `npm -v` in your terminal. You should see the installed versions.
+- **🔍 Search API** – Enables keyword-based mutual fund search using GIN indexing for optimized performance.
+- **📊 Dataset Ingestion** – Fetches mutual fund data from RAPID API and writes it to a PostgreSQL database.
+- **🖥️ User Interface** – Built with React.js to browse mutual funds by fund families, view details, and purchase dummy units.
 
-2. Python Setup:
-    - Install Python on your machine. You can download it from the official Python website.
-    - Verify the installation by running `python --version` and `pip --version` in your terminal. You should see the installed versions.
+---
 
-3. React Setup:
-    - Change to the client directory using `cd client`.
-    - Run `npm install` to install the required dependencies.
-    - Once the installation is complete, you can start the React development server using `npm start`.
+## 🚀 Getting Started
 
-4. Python Virtual Environment Setup:
-    - Change to the server directory using `cd server`.
-    - Create a virtual environment by running `python -m venv venv`.
-    - Activate the virtual environment:
-      - On Windows: `venv\Scripts\activate`
-      - On macOS/Linux: `source venv/bin/activate`
-    - Install the required Python packages by running `pip install -r requirements.txt`.
+Follow these steps to set up and run the application.
 
-5. Running the Applications:
-    - Start the server by running `uvicorn app.main:app --reload` in the server directory.
-    - Open a new terminal window and change to the client directory using `cd client`.
-    - Start the client application by running `npm start`.
-Test1 commit
-6. Create a .env file in server directory using .env.example file to run the local server.
+### 🛠 Prerequisites
 
-for testing:
-username: testuser
-password: pwd
+Ensure you have the following installed:
 
+- **Node.js** (for frontend & backend development)  
+  - Download: [Node.js Official Site](https://nodejs.org/)  
+  - Verify installation:
+    ```sh
+    node -v
+    npm -v
+    ```
+
+- **Python** (for backend API)  
+  - Download: [Python Official Site](https://www.python.org/)  
+  - Verify installation:
+    ```sh
+    python --version
+    pip --version
+    ```
+
+---
+
+## 🏗 Installation
+
+### 1️⃣ Backend (FastAPI Server)
+
+```sh
+cd server
+python -m venv venv      # Create virtual environment
+source venv/bin/activate  # Activate (Linux/Mac)
+venv\Scripts\activate     # Activate (Windows)
+pip install -r requirements.txt  # Install dependencies
 
